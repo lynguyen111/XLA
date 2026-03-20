@@ -6,9 +6,9 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
-TRAIN_DIR = os.path.join(DATA_DIR, 'train')
-VAL_DIR = os.path.join(DATA_DIR, 'val')
-TEST_DIR = os.path.join(DATA_DIR, 'test')
+TRAIN_DIR = os.path.join(DATA_DIR, 'dataset', 'train')
+VAL_DIR = os.path.join(DATA_DIR, 'dataset', 'val')
+TEST_DIR = os.path.join(DATA_DIR, 'dataset', 'test')
 
 # --- DATASET SPLIT ---
 TRAIN_RATIO = 0.70

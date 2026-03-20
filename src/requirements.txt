@@ -2,3 +2,6 @@ icrawler==0.6.10
 bing-image-downloader==1.1.2
 kagglehub
 Pillow
+torch
+torchvision
+torchaudio
