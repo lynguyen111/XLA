@@ -21,13 +21,17 @@ def get_dataloaders(batch_size=None, image_size=None):
     # --- Định nghĩa các Augmentation & Transform ---
     # Tập Train: Dùng các thao tác Random crop, lật ảnh ngang... để data xịn hơn
     train_transform = transforms.Compose([
-        transforms.Resize((256, 256)), # Phóng to một chút
-        transforms.RandomResizedCrop(image_size), # Cắt ngẫu nhiên xuống chuẩn 224
+        transforms.Resize((256, 256)),
+        transforms.RandomResizedCrop(image_size, scale=(0.6, 1.0)),  # crop mạnh hơn
         transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15), # Lắc nhẹ 15 độ
-        transforms.ColorJitter(brightness=0.2, contrast=0.2), # Đổi ánh sáng
-        transforms.ToTensor(), # Đưa về dạng tensor [0.0, 1.0]
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Chuẩn hoá ImageNet
+        transforms.RandomVerticalFlip(p=0.1),
+        transforms.RandomRotation(25),                               # xoay rộng hơn
+        transforms.ColorJitter(brightness=0.4, contrast=0.4,        # jitter mạnh hơn
+                               saturation=0.3, hue=0.1),
+        transforms.RandomGrayscale(p=0.05),
+        transforms.ToTensor(),
+        transforms.RandomErasing(p=0.3, scale=(0.02, 0.2)),         # che ngẫu nhiên 1 vùng
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
     # Tập Val và Test: Không áp dụng random augmentation, chỉ resize chuẩn và normalize (Tránh sai lệch lúc đánh giá)

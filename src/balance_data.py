@@ -46,7 +46,7 @@ def augment_image(filepath, target_dir, count, num_augments=4):
         print(f"Lỗi khi augment ảnh {filepath}: {e}")
         return 0
 
-def balance_dataset(raw_dir="data/raw", target_count=600):
+def balance_dataset(raw_dir="data/raw", target_count=1200):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
     target_dir = os.path.join(project_root, raw_dir)

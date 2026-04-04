@@ -19,6 +19,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Insect Classification Pipeline')
     parser.add_argument('--split', action='store_true', help='Phân chia dữ liệu Data Loader.')
     parser.add_argument('--train', action='store_true', help='Tiến hành Train mô hình từ số 0.')
+    parser.add_argument('--model', default='resnet', choices=['cnn', 'resnet'], help='Chọn mô hình: cnn hoặc resnet')
     
     args = parser.parse_args()
     
@@ -27,6 +28,6 @@ if __name__ == "__main__":
         split_dataset()
     elif args.train:
         from training.train import train_model
-        train_model()
+        train_model(args.model)
     else:
         print_help()
