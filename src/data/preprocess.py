@@ -12,57 +12,71 @@ except ImportError:
     print("Vui lòng chạy từ thư mục dự án.")
     sys.exit(1)
 
+
 def get_dataloaders(batch_size=None, image_size=None):
     if batch_size is None:
         batch_size = config.BATCH_SIZE
     if image_size is None:
         image_size = config.IMAGE_SIZE
-        
+
     # --- Định nghĩa các Augmentation & Transform ---
     # Tập Train: Dùng các thao tác Random crop, lật ảnh ngang... để data xịn hơn
-    train_transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.RandomResizedCrop(image_size, scale=(0.6, 1.0)),  # crop mạnh hơn
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(p=0.1),
-        transforms.RandomRotation(25),                               # xoay rộng hơn
-        transforms.ColorJitter(brightness=0.4, contrast=0.4,        # jitter mạnh hơn
-                               saturation=0.3, hue=0.1),
-        transforms.RandomGrayscale(p=0.05),
-        transforms.ToTensor(),
-        transforms.RandomErasing(p=0.3, scale=(0.02, 0.2)),         # che ngẫu nhiên 1 vùng
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-
+    train_transform = transforms.Compose(
+        [
+            transforms.Resize((256, 256)),
+            transforms.RandomResizedCrop(image_size, scale=(0.8, 1.0)),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(15),
+            transforms.ColorJitter(
+                brightness=0.2, contrast=0.2, saturation=0.2, hue=0.05
+            ),
+            transforms.ToTensor(),
+            transforms.RandomErasing(p=0.25, scale=(0.02, 0.1)),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
     # Tập Val và Test: Không áp dụng random augmentation, chỉ resize chuẩn và normalize (Tránh sai lệch lúc đánh giá)
-    val_test_transform = transforms.Compose([
-        transforms.Resize((256, 256)),
-        transforms.CenterCrop(image_size),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
+    val_test_transform = transforms.Compose(
+        [
+            transforms.Resize((256, 256)),
+            transforms.CenterCrop(image_size),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 
     # --- Đọc dataset bằng ImageFolder ---
     print(f"Loading data từ: {config.DATA_DIR}")
     train_dataset = datasets.ImageFolder(config.TRAIN_DIR, transform=train_transform)
     val_dataset = datasets.ImageFolder(config.VAL_DIR, transform=val_test_transform)
     test_dataset = datasets.ImageFolder(config.TEST_DIR, transform=val_test_transform)
-    
+
     # --- DataLoader ---
     # Dùng num_workers để tăng tốc đọc file song song
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2, drop_last=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=2,
+        drop_last=True,
+    )
+    val_loader = DataLoader(
+        val_dataset, batch_size=batch_size, shuffle=False, num_workers=2
+    )
+    test_loader = DataLoader(
+        test_dataset, batch_size=batch_size, shuffle=False, num_workers=2
+    )
 
     return train_loader, val_loader, test_loader, train_dataset.classes
+
 
 if __name__ == "__main__":
     train_loader, val_loader, test_loader, classes = get_dataloaders()
     print("Các nhãn được tìm thấy:", classes)
-    
+
     # Kéo thử 1 batch
     dataiter = iter(train_loader)
     images, labels = next(dataiter)
-    
+
     print("Batch images shape:", images.shape)
     print("Batch labels shape:", labels.shape)

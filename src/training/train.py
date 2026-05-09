@@ -13,6 +13,9 @@ from data.preprocess import get_dataloaders
 from models.cnn import SimpleInsectCNN
 from models.resnet import get_resnet50
 
+from models.densenet import get_densenet121, get_densenet169, get_densenet201
+from models.efficientnet import get_efficientnet_b3
+
 
 def train_model(model_name="resnet"):
     print(
@@ -24,7 +27,16 @@ def train_model(model_name="resnet"):
 
     # Khởi tạo mô hình
     if model_name == "resnet":
-        model = get_resnet50(num_classes=len(classes), freeze_backbone=False)
+        model = get_resnet50(num_classes=len(classes))
+
+    elif model_name == "densenet121":
+        model = get_densenet121(num_classes=len(classes))
+    elif model_name == "densenet169":
+        model = get_densenet169(num_classes=len(classes))
+    elif model_name == "densenet201":
+        model = get_densenet201(num_classes=len(classes))
+    elif model_name == "efficientnet_b3":
+        model = get_efficientnet_b3(num_classes=len(classes))
     else:
         model = SimpleInsectCNN(num_classes=len(classes))
     model = model.to(config.DEVICE)
@@ -109,7 +121,9 @@ def train_model(model_name="resnet"):
             print(f"   ⭐ Saved best model -> {save_path}")
         else:
             early_stop_counter += 1
-            print(f"   ⏳ Early stopping: {early_stop_counter}/{config.EARLY_STOPPING_PATIENCE}")
+            print(
+                f"   ⏳ Early stopping: {early_stop_counter}/{config.EARLY_STOPPING_PATIENCE}"
+            )
             if early_stop_counter >= config.EARLY_STOPPING_PATIENCE:
                 print(f"\n[!] Early stopping tại epoch {epoch}!")
                 break
@@ -127,6 +141,19 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="resnet", choices=["cnn", "resnet"])
+    parser.add_argument(
+        "--model",
+        default="resnet",
+        choices=[
+            "cnn",
+            "resnet",
+            "mobilenetv2",
+            "mobilenetv3",
+            "densenet121",
+            "densenet169",
+            "densenet201",
+            "efficientnet_b3",
+        ],
+    )
     args = parser.parse_args()
     train_model(args.model)

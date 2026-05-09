@@ -6,8 +6,6 @@ PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")
-
-RAW_DATA_DIR = os.path.join(DATA_DIR, "raw")
 TRAIN_DIR = os.path.join(DATA_DIR, "dataset", "train")
 VAL_DIR = os.path.join(DATA_DIR, "dataset", "val")
 TEST_DIR = os.path.join(DATA_DIR, "dataset", "test")
@@ -18,11 +16,11 @@ VAL_RATIO = 0.15
 TEST_RATIO = 0.15
 
 # --- HYPERPARAMETERS ---
-EPOCHS = 100
-EARLY_STOPPING_PATIENCE = 10
+EPOCHS = 30
+EARLY_STOPPING_PATIENCE = 8
 LEARNING_RATE = 0.001
 IMAGE_SIZE = (224, 224)
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 
 # --- DEVICE ---
 DEVICE = (
