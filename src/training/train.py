@@ -14,7 +14,7 @@ from models.cnn import SimpleInsectCNN
 from models.resnet import get_resnet50
 
 from models.densenet import get_densenet121, get_densenet169, get_densenet201
-from models.efficientnet import get_efficientnet_b3
+
 
 
 def train_model(model_name="resnet"):
@@ -35,8 +35,6 @@ def train_model(model_name="resnet"):
         model = get_densenet169(num_classes=len(classes))
     elif model_name == "densenet201":
         model = get_densenet201(num_classes=len(classes))
-    elif model_name == "efficientnet_b3":
-        model = get_efficientnet_b3(num_classes=len(classes))
     else:
         model = SimpleInsectCNN(num_classes=len(classes))
     model = model.to(config.DEVICE)
